@@ -4,7 +4,7 @@ from os import environ
 # API Configuration
 API_ID = int(os.environ.get("API_ID", "25933223"))
 API_HASH = os.environ.get("API_HASH", "6ef5a426d85b7f01562a41e6416791d3")
-BOT_TOKEN = os.environ.get("BOT_TOKEN", "8370217937:AAGV0STSWO7jKoHwv9oGwFsG0KZcozJjX9w")
+BOT_TOKEN = os.environ.get("BOT_TOKEN", "")
 
 CREDIT = os.environ.get("CREDIT", "𓍯𝙎𝙪𝙟𝙖𝙡⚝")
 # MongoDB Configuration
@@ -13,8 +13,8 @@ DATABASE_URL = os.environ.get("DATABASE_URL", "mongodb+srv://sujalbot:sujalbot@c
 MONGO_URL = DATABASE_URL  # For auth system
 
 # Owner and Admin Configuration
-OWNER_ID = int(os.environ.get("OWNER_ID", "8535060154"))
-ADMINS = [8458169280, 8383373235]  # dono admins id list me
+OWNER_ID = int(os.environ.get("OWNER_ID", ""))
+ADMINS = [7879795001, 8383373235]  # dono admins id list me
 
 
 # Channel Configuration
@@ -60,6 +60,7 @@ Please contact the admin @ItsUGBot to get access.</blockquote>""",
 
 <blockquote>Use format: {format}</blockquote>"""
 }
+
 
 
 
