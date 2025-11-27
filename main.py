@@ -491,35 +491,47 @@ async def txt_handler(bot: Client, m: Message):
   
 )
     
-    chat_id = editable.chat.id
-    timeout_duration = 3 if auto_flags.get(chat_id) else 20
-    try:
-        input0: Message = await bot.listen(editable.chat.id, timeout=timeout_duration)
-        raw_text = input0.text
-        await input0.delete(True)
-    except asyncio.TimeoutError:
-        raw_text = '1'
-    
-    if int(raw_text) > len(links) :
-        await editable.edit(f"**🔹Enter number in range of Index (01-{len(links)})**")
-        processing_request = False  # Reset the processing flag
-        await m.reply_text("**🔹Exiting Task......  **")
-        return
-    
-    chat_id = editable.chat.id
-    timeout_duration = 3 if auto_flags.get(chat_id) else 20
-    await editable.edit(f"**Enter Batch Name or send /d**")
-    try:
-        input1: Message = await bot.listen(editable.chat.id, timeout=timeout_duration)
-        raw_text0 = input1.text
-        await input1.delete(True)
-    except asyncio.TimeoutError:
-        raw_text0 = '/d'
-    
-    if raw_text0 == '/d':
-        b_name = file_name.replace('_', ' ')
-    else:
-        b_name = raw_text0
+chat_id = editable.chat.id
+timeout_duration = 3 if auto_flags.get(chat_id) else 20
+
+# यूज़र से लिंक इंडेक्स इनपुट लेना
+try:
+    input0: Message = await bot.listen(chat_id, timeout=timeout_duration)
+    raw_text = input0.text.strip()
+    await input0.delete(True)
+except asyncio.TimeoutError:
+    raw_text = '1'  # डिफ़ॉल्ट वैल्यू अगर टाइमआउट
+
+# validate करें कि raw_text नंबर है
+if not raw_text.isdigit():
+    await editable.edit(f"**🔹कृपया 1 से {len(links)} के बीच एक नंबर दर्ज करें।**")
+    processing_request = False
+    await m.reply_text("**🔹Task exit हो रहा है...**")
+    return
+
+selected_index = int(raw_text)
+# नंबर रेंज चेक
+if selected_index < 1 or selected_index > len(links):
+    await editable.edit(f"**🔹Enter number in range of Index (01-{len(links)})**")
+    processing_request = False
+    await m.reply_text("**🔹Exiting Task......  **")
+    return
+
+# अब बैच नेम पूछना
+await editable.edit(f"**Enter Batch Name or send /d**")
+try:
+    input1: Message = await bot.listen(chat_id, timeout=timeout_duration)
+    raw_text0 = input1.text.strip()
+    await input1.delete(True)
+except asyncio.TimeoutError:
+    raw_text0 = '/d'  # डिफ़ॉल्ट बैच नेम
+
+# बैच नेम सेट करना
+if raw_text0 == '/d':
+    b_name = file_name.replace('_', ' ')
+else:
+    b_name = raw_text0
+
     
     chat_id = editable.chat.id
     timeout_duration = 3 if auto_flags.get(chat_id) else 20
