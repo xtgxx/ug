@@ -1,3 +1,4 @@
+
 # 🔧 Standard Library
 import os
 import re
@@ -491,197 +492,175 @@ async def txt_handler(bot: Client, m: Message):
   
 )
     
-# -----------------------------
-# लिंक इंडेक्स चुनना
-# -----------------------------
-chat_id = editable.chat.id
-timeout_duration = 3 if auto_flags.get(chat_id) else 20
-
-try:
-    input0: Message = await bot.listen(chat_id, timeout=timeout_duration)
-    raw_text = input0.text.strip()
-    await input0.delete(True)
-except asyncio.TimeoutError:
-    raw_text = '1'
-
-if not raw_text.isdigit():
-    await editable.edit(f"**🔹कृपया 1 से {len(links)} के बीच एक नंबर दर्ज करें।**")
-    processing_request = False
-    await m.reply_text("**🔹Task exit हो रहा है...**")
-    return
-
-selected_index = int(raw_text)
-if selected_index < 1 or selected_index > len(links):
-    await editable.edit(f"**🔹Enter number in range of Index (01-{len(links)})**")
-    processing_request = False
-    await m.reply_text("**🔹Exiting Task......  **")
-    return
-
-# -----------------------------
-# बैच नेम
-# -----------------------------
-await editable.edit(f"**Enter Batch Name or send /d**")
-try:
-    input1: Message = await bot.listen(chat_id, timeout=timeout_duration)
-    raw_text0 = input1.text.strip()
-    await input1.delete(True)
-except asyncio.TimeoutError:
-    raw_text0 = '/d'
-
-if raw_text0 == '/d':
-    b_name = file_name.replace('_', ' ')
-else:
-    b_name = raw_text0
-
-# -----------------------------
-# वीडियो रिज़ॉल्यूशन
-# -----------------------------
-await editable.edit("__**Enter resolution or Video Quality (`144`, `240`, `360`, `480`, `720`, `1080`)**__")
-try:
-    input2: Message = await bot.listen(chat_id, timeout=timeout_duration)
-    raw_text2 = input2.text.strip()
-    await input2.delete(True)
-except asyncio.TimeoutError:
-    raw_text2 = '480'
-
-quality = f"{raw_text2}p"
-try:
-    if raw_text2 == "144":
-        res = "256x144"
-    elif raw_text2 == "240":
-        res = "426x240"
-    elif raw_text2 == "360":
-        res = "640x360"
-    elif raw_text2 == "480":
-        res = "854x480"
-    elif raw_text2 == "720":
-        res = "1280x720"
-    elif raw_text2 == "1080":
-        res = "1920x1080"
+    chat_id = editable.chat.id
+    timeout_duration = 3 if auto_flags.get(chat_id) else 20
+    try:
+        input0: Message = await bot.listen(editable.chat.id, timeout=timeout_duration)
+        raw_text = input0.text
+        await input0.delete(True)
+    except asyncio.TimeoutError:
+        raw_text = '1'
+    
+    if int(raw_text) > len(links) :
+        await editable.edit(f"**🔹Enter number in range of Index (01-{len(links)})**")
+        processing_request = False  # Reset the processing flag
+        await m.reply_text("**🔹Exiting Task......  **")
+        return
+    
+    chat_id = editable.chat.id
+    timeout_duration = 3 if auto_flags.get(chat_id) else 20
+    await editable.edit(f"**Enter Batch Name or send /d**")
+    try:
+        input1: Message = await bot.listen(editable.chat.id, timeout=timeout_duration)
+        raw_text0 = input1.text
+        await input1.delete(True)
+    except asyncio.TimeoutError:
+        raw_text0 = '/d'
+    
+    if raw_text0 == '/d':
+        b_name = file_name.replace('_', ' ')
     else:
-        res = "UN"
-except Exception:
-    res = "UN"
+        b_name = raw_text0
+    
+    chat_id = editable.chat.id
+    timeout_duration = 3 if auto_flags.get(chat_id) else 20
+    await editable.edit("__**Enter resolution or Video Quality (`144`, `240`, `360`, `480`, `720`, `1080`)**__")
+    try:
+        input2: Message = await bot.listen(editable.chat.id, timeout=timeout_duration)
+        raw_text2 = input2.text
+        await input2.delete(True)
+    except asyncio.TimeoutError:
+        raw_text2 = '480'
+    quality = f"{raw_text2}p"
+    try:
+        if raw_text2 == "144":
+            res = "256x144"
+        elif raw_text2 == "240":
+            res = "426x240"
+        elif raw_text2 == "360":
+            res = "640x360"
+        elif raw_text2 == "480":
+            res = "854x480"
+        elif raw_text2 == "720":
+            res = "1280x720"
+        elif raw_text2 == "1080":
+            res = "1920x1080" 
+        else: 
+            res = "UN"
+    except Exception:
+            res = "UN"
+    chat_id = editable.chat.id
+    timeout_duration = 3 if auto_flags.get(chat_id) else 20
 
-# -----------------------------
-# वॉटरमार्क इनपुट
-# -----------------------------
-# --- Global declaration always BEFORE using variable ---
-global watermark
-watermark = ""     # default value
+    await editable.edit("**Enter watermark text or send /d**")
+    try:
+        inputx: Message = await bot.listen(editable.chat.id, timeout=timeout_duration)
+        raw_textx = inputx.text
+        await inputx.delete(True)
+    except asyncio.TimeoutError:
+        raw_textx = '/d'
+    
+    # Define watermark variable based on input
+    global watermark
+    if raw_textx == '/d':
+        watermark = ""
+    else:
+        watermark = raw_textx
+    
+    await editable.edit(f"__**Enter the Credit Name or send /d\nOr Send **Admin,file prename**\nSeparate them with a comma (,)\n\n<blockquote><i>Example for caption only: Admin\nExample for both caption and file name: Admin,Prename</i></blockquote>**")
+    try:
+        input3: Message = await bot.listen(editable.chat.id, timeout=timeout_duration)
+        raw_text3 = input3.text
+        await input3.delete(True)
+    except asyncio.TimeoutError:
+        raw_text3 = '/d' 
+        
+    if raw_text3 == '/d':
+        CR = f"{CREDIT}"
+    elif "," in raw_text3:
+        CR, PRENAME = raw_text3.split(",")
+    else:
+        CR = raw_text3
+    chat_id = editable.chat.id
+    timeout_duration = 3 if auto_flags.get(chat_id) else 20
+    await editable.edit(f"**send the token of __PW__ or ClassPlus [Optional] OR send /d**")
+    try:
+        input4: Message = await bot.listen(editable.chat.id, timeout=timeout_duration)
+        raw_text4 = input4.text
+        await input4.delete(True)
+    except asyncio.TimeoutError:
+        raw_text4 = '/d'
+    chat_id = editable.chat.id
+    timeout_duration = 3 if auto_flags.get(chat_id) else 20
+    await editable.edit("**Send Video Thumbnail:**\n\n• Send Photo for custom thumbnail\n• Send /d for default thumbnail\n• Send /skip to skip")
+    thumb = "/d"  # Set default value
+    try:
+        input6 = await bot.listen(chat_id=m.chat.id, timeout=timeout_duration)
+        
+        if input6.photo:
+            # If user sent a photo
+            if not os.path.exists("downloads"):
+                os.makedirs("downloads")
+            temp_file = f"downloads/thumb_{m.from_user.id}.jpg"
+            try:
+                # Download photo using correct Pyrogram method
+                await bot.download_media(message=input6.photo, file_name=temp_file)
+                thumb = temp_file
+                await editable.edit("**✅ Custom thumbnail saved successfully!**")
+                await asyncio.sleep(1)
+            except Exception as e:
+                print(f"Error downloading thumbnail: {str(e)}")
+                await editable.edit("**⚠️ Failed to save thumbnail! Using default.**")
+                thumb = "/d"
+                await asyncio.sleep(1)
+        elif input6.text:
+            if input6.text == "/d":
+                thumb = "/d"
+                await editable.edit("**ℹ️ Using default thumbnail.**")
+                await asyncio.sleep(1)
+            elif input6.text == "/skip":
+                thumb = "no"
+                await editable.edit("**ℹ️ Skipping thumbnail.**")
+                await asyncio.sleep(1)
+            else:
+                await editable.edit("**⚠️ Invalid input! Using default thumbnail.**")
+                await asyncio.sleep(1)
+        await input6.delete(True)
+    except asyncio.TimeoutError:
+        await editable.edit("**⚠️ Timeout! Using default thumbnail.**")
+        await asyncio.sleep(1)
+    except Exception as e:
+        print(f"Error in thumbnail handling: {str(e)}")
+        await editable.edit("**⚠️ Error! Using default thumbnail.**")
+        await asyncio.sleep(1)
+ 
+    await editable.edit("__**⚠️Provide the Channel ID or send /d__\n\n<blockquote><i>🔹 Make me an admin to upload.\n🔸Send /id in your channel to get the Channel ID.\n\nExample: Channel ID = -100XXXXXXXXXXX</i></blockquote>\n**")
+    try:
+        input7: Message = await bot.listen(editable.chat.id, timeout=timeout_duration)
+        raw_text7 = input7.text
+        await input7.delete(True)
+    except asyncio.TimeoutError:
+        raw_text7 = '/d'
 
-await editable.edit("**Enter watermark text or send /d**")
-try:
-    inputx: Message = await bot.listen(chat_id, timeout=timeout_duration)
-    raw_textx = inputx.text.strip()
-    await inputx.delete(True)
-except asyncio.TimeoutError:
-    raw_textx = '/d'
+    if "/d" in raw_text7:
+        channel_id = m.chat.id
+    else:
+        channel_id = raw_text7    
+    await editable.delete()
 
-# Set watermark
-watermark = "" if raw_textx == '/d' else raw_textx
-
-# -----------------------------
-# क्रेडिट इनपुट
-# -----------------------------
-await editable.edit(f"__**Enter the Credit Name or send /d\nOr Send **Admin,file prename**\nSeparate them with a comma (,)\n\n<blockquote><i>Example for caption only: Admin\nExample for both caption and file name: Admin,Prename</i></blockquote>**")
-try:
-    input3: Message = await bot.listen(chat_id, timeout=timeout_duration)
-    raw_text3 = input3.text.strip()
-    await input3.delete(True)
-except asyncio.TimeoutError:
-    raw_text3 = '/d'
-
-if raw_text3 == '/d':
-    CR = f"{CREDIT}"
-elif "," in raw_text3:
-    CR, PRENAME = raw_text3.split(",")
-else:
-    CR = raw_text3
-
-# -----------------------------
-# Token input
-# -----------------------------
-await editable.edit(f"**send the token of __PW__ or ClassPlus [Optional] OR send /d**")
-try:
-    input4: Message = await bot.listen(chat_id, timeout=timeout_duration)
-    raw_text4 = input4.text.strip()
-    await input4.delete(True)
-except asyncio.TimeoutError:
-    raw_text4 = '/d'
-
-# -----------------------------
-# Thumbnail handling
-# -----------------------------
-await editable.edit("**Send Video Thumbnail:**\n\n• Send Photo for custom thumbnail\n• Send /d for default thumbnail\n• Send /skip to skip")
-thumb = "/d"
-try:
-    input6 = await bot.listen(chat_id=m.chat.id, timeout=timeout_duration)
-    if input6.photo:
-        if not os.path.exists("downloads"):
-            os.makedirs("downloads")
-        temp_file = f"downloads/thumb_{m.from_user.id}.jpg"
-        try:
-            await bot.download_media(message=input6.photo, file_name=temp_file)
-            thumb = temp_file
-            await editable.edit("**✅ Custom thumbnail saved successfully!**")
-            await asyncio.sleep(1)
-        except Exception as e:
-            print(f"Error downloading thumbnail: {str(e)}")
-            await editable.edit("**⚠️ Failed to save thumbnail! Using default.**")
-            thumb = "/d"
-            await asyncio.sleep(1)
-    elif input6.text:
-        if input6.text == "/d":
-            thumb = "/d"
-            await editable.edit("**ℹ️ Using default thumbnail.**")
-            await asyncio.sleep(1)
-        elif input6.text == "/skip":
-            thumb = "no"
-            await editable.edit("**ℹ️ Skipping thumbnail.**")
-            await asyncio.sleep(1)
+    try:
+        if raw_text == "1":
+            batch_message = await bot.send_message(chat_id=channel_id, text=f"<blockquote><b>🎯Target Batch : {b_name}</b></blockquote>")
+            if "/d" not in raw_text7:
+                await bot.send_message(chat_id=m.chat.id, text=f"<blockquote><b><i>🎯Target Batch : {b_name}</i></b></blockquote>\n\n🔄 Your Task is under processing, please check your Set Channel📱. Once your task is complete, I will inform you 📩")
+                await bot.pin_chat_message(channel_id, batch_message.id)
+                message_id = batch_message.id + 1
+                await bot.delete_messages(channel_id, message_id)
         else:
-            await editable.edit("**⚠️ Invalid input! Using default thumbnail.**")
-            await asyncio.sleep(1)
-    await input6.delete(True)
-except asyncio.TimeoutError:
-    await editable.edit("**⚠️ Timeout! Using default thumbnail.**")
-    await asyncio.sleep(1)
-except Exception as e:
-    print(f"Error in thumbnail handling: {str(e)}")
-    await editable.edit("**⚠️ Error! Using default thumbnail.**")
-    await asyncio.sleep(1)
-
-# -----------------------------
-# Channel ID input
-# -----------------------------
-await editable.edit("__**⚠️Provide the Channel ID or send /d__\n\n<blockquote><i>🔹 Make me an admin to upload.\n🔸Send /id in your channel to get the Channel ID.\n\nExample: Channel ID = -100XXXXXXXXXXX</i></blockquote>\n**")
-try:
-    input7: Message = await bot.listen(chat_id, timeout=timeout_duration)
-    raw_text7 = input7.text.strip()
-    await input7.delete(True)
-except asyncio.TimeoutError:
-    raw_text7 = '/d'
-
-channel_id = m.chat.id if "/d" in raw_text7 else raw_text7
-await editable.delete()
-
-# -----------------------------
-# Send Batch Message
-# -----------------------------
-try:
-    if raw_text == "1":
-        batch_message = await bot.send_message(chat_id=channel_id, text=f"<blockquote><b>🎯Target Batch : {b_name}</b></blockquote>")
-        if "/d" not in raw_text7:
-            await bot.send_message(chat_id=m.chat.id, text=f"<blockquote><b><i>🎯Target Batch : {b_name}</i></b></blockquote>\n\n🔄 Your Task is under processing, please check your Set Channel📱. Once your task is complete, I will inform you 📩")
-            await bot.pin_chat_message(channel_id, batch_message.id)
-            message_id = batch_message.id + 1
-            await bot.delete_messages(channel_id, message_id)
-    else:
-        if "/d" not in raw_text7:
-            await bot.send_message(chat_id=m.chat.id, text=f"<blockquote><b><i>🎯Target Batch : {b_name}</i></b></blockquote>\n\n🔄 Your Task is under processing, please check your Set Channel📱. Once your task is complete, I will inform you 📩")
-except Exception as e:
-    await m.reply_text(f"**Fail Reason »**\n<blockquote><i>{e}</i></blockquote>\n\n✦𝐁𝐨𝐭 𝐌𝐚𝐝𝐞 𝐁𝐲 ✦ {CREDIT}🌟`")
+             if "/d" not in raw_text7:
+                await bot.send_message(chat_id=m.chat.id, text=f"<blockquote><b><i>🎯Target Batch : {b_name}</i></b></blockquote>\n\n🔄 Your Task is under processing, please check your Set Channel📱. Once your task is complete, I will inform you 📩")
+    except Exception as e:
+        await m.reply_text(f"**Fail Reason »**\n<blockquote><i>{e}</i></blockquote>\n\n✦𝐁𝐨𝐭 𝐌𝐚𝐝𝐞 𝐁𝐲 ✦ {CREDIT}🌟`")
 
     failed_count = 0
     count =int(raw_text)    
