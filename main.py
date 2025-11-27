@@ -566,6 +566,10 @@ except Exception:
 # -----------------------------
 # वॉटरमार्क इनपुट
 # -----------------------------
+# --- Global declaration always BEFORE using variable ---
+global watermark
+watermark = ""     # default value
+
 await editable.edit("**Enter watermark text or send /d**")
 try:
     inputx: Message = await bot.listen(chat_id, timeout=timeout_duration)
@@ -574,7 +578,7 @@ try:
 except asyncio.TimeoutError:
     raw_textx = '/d'
 
-global watermark
+# Set watermark
 watermark = "" if raw_textx == '/d' else raw_textx
 
 # -----------------------------
